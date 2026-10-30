@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b46">
+  <title>Water Billing Portal — Demo</title>
+  <style>
+    :root{color-scheme:light;--navy:#102b46;--navy2:#173d60;--blue:#177ac2;--pale:#eaf5fc;--ink:#152a3c;--muted:#617486;--line:#dbe5ed;--bg:#f3f7fa;--white:#fff;--green:#147d58;}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);line-height:1.5}
+    .top{background:linear-gradient(125deg,var(--navy),var(--navy2));color:#fff;padding:23px 18px 76px}
+    .top-inner{max-width:960px;margin:auto;display:flex;align-items:center;gap:12px}
+    .mark{width:43px;height:43px;border-radius:13px;background:#ffffff17;display:grid;place-items:center;border:1px solid #ffffff26;flex:none}
+    .brand{font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+    .brand-sub{font-size:12px;color:#c4d8e9;margin-top:2px}
+    .hero{max-width:960px;margin:26px auto 0;padding:0 18px}
+    .eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#9ed9ff}
+    h1{font-size:clamp(27px,5vw,39px);line-height:1.12;margin:10px 0 10px;letter-spacing:-.035em}
+    .hero p{margin:0;max-width:620px;color:#d8e6f0;font-size:15px}
+    main{max-width:960px;margin:-48px auto 0;padding:0 16px 34px;position:relative}
+    .layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(245px,.8fr);gap:18px;align-items:start}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:20px;box-shadow:0 9px 28px #102b460a;overflow:hidden}
+    .card-body{padding:23px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+    h2{font-size:17px;letter-spacing:-.02em;margin:0}
+    .pill{font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:800;border-radius:999px;background:#fff3d6;color:#865c0a;padding:6px 9px;white-space:nowrap}
+    .amount-label{font-size:13px;color:var(--muted);margin-bottom:4px}
+    .amount{font-size:clamp(34px,6vw,45px);font-weight:850;letter-spacing:-.055em;color:var(--navy);line-height:1.15}
+    .amount small{font-size:15px;letter-spacing:0;font-weight:700;color:#53687a;margin-right:5px}
+    .rule{border:0;border-top:1px solid var(--line);margin:20px 0}
+    .rows{display:grid;gap:0}
+    .row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:11px 0;border-bottom:1px solid #edf1f5;font-size:13px}
+    .row:last-child{border-bottom:0}
+    .row .k{color:var(--muted)}.row .v{font-weight:750;text-align:right;overflow-wrap:anywhere}
+    .pay-btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin-top:19px;padding:15px 18px;border:0;border-radius:12px;background:var(--blue);color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:transform .12s,background .12s}
+    .pay-btn:hover{background:#0867a9}.pay-btn:active{transform:translateY(1px)}.pay-btn:disabled{background:#6e9b87;cursor:default}
+    .note{font-size:12px;color:var(--muted);margin:11px 0 0;text-align:center}
+    .side-title{display:flex;gap:10px;align-items:center;margin-bottom:13px}
+    .icon-box{width:36px;height:36px;background:var(--pale);border-radius:11px;display:grid;place-items:center;flex:none;color:var(--blue)}
+    .side p{font-size:13px;color:var(--muted);margin:0 0 14px}
+    .step{display:flex;gap:11px;align-items:flex-start;margin-top:14px}
+    .num{width:25px;height:25px;border-radius:50%;background:var(--pale);color:var(--blue);display:grid;place-items:center;font-size:12px;font-weight:850;flex:none}
+    .step strong{display:block;font-size:13px;margin-bottom:2px}.step span{display:block;font-size:12px;color:var(--muted)}
+    .notice{max-width:960px;margin:18px auto 0;padding:0 16px}
+    .notice-inner{background:#fff8e9;border:1px solid #f0dfb6;color:#72501a;border-radius:15px;padding:14px 16px;font-size:12px;display:flex;gap:10px;align-items:flex-start}
+    .notice-inner strong{display:block;margin-bottom:2px}
+    .result{display:none;margin-top:15px;padding:14px;border-radius:12px;border:1px solid #b5dfcd;background:#edfaf3;color:#155c40;font-size:13px}
+    .result.visible{display:block}.result strong{display:block;margin-bottom:4px}
+    .result small{display:block;margin-top:7px;color:#376c57}
+    .breakdown-row{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid #edf1f5;font-size:13px}
+    .breakdown-row:last-child{border-bottom:0}
+    .breakdown-row .detail{color:var(--muted)}.breakdown-row .charge{font-weight:750;text-align:right;white-space:nowrap}
+    .breakdown-total{display:flex;justify-content:space-between;gap:12px;padding:12px 0 2px;font-size:14px;font-weight:850;color:var(--navy)}
+    .result.warning{border-color:#f0dfb6;background:#fff8e9;color:#72501a}
+    footer{text-align:center;font-size:11px;color:#8191a0;padding:18px 16px 28px}
+    @media(max-width:700px){.layout{grid-template-columns:1fr}.top{padding-bottom:70px}.card-body{padding:20px}.hero{margin-top:24px}.side .card-body{padding:19px}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <div class="mark" aria-hidden="true">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="M12 2.8C9.9 6.2 5.5 10.1 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 10.1 14.1 6.2 12 2.8Z" stroke="currentColor" stroke-width="1.8"/><path d="M8.6 15.2c.2 1.7 1.3 2.7 3.1 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </div>
+      <div><div class="brand">Water Billing Portal</div><div class="brand-sub">Smart water monitoring system</div></div>
+    </div>
+    <div class="hero">
+      <div class="eyebrow">Resident billing</div>
+      <h1>Your water bill,<br>clearly explained.</h1>
+      <p>Review your water consumption, progressive tariff breakdown, and demonstration payment status.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="card" aria-labelledby="billHeading">
+        <div class="card-body">
+          <div class="section-head">
+            <h2 id="billHeading">Monthly water bill</h2>
+            <span class="pill" id="statusPill">Demo · Unpaid</span>
+          </div>
+          <div class="amount-label">Total amount due</div>
+          <div class="amount"><small>PHP</small><span id="amountDue">137.50</span></div>
+          <hr class="rule">
+          <div class="rows">
+            <div class="row"><span class="k">Billing period</span><span class="v" id="period">10/2026</span></div>
+            <div class="row"><span class="k">Water consumption</span><span class="v" id="usage">12,500.00 L (12.50 m³)</span></div>
+            <div class="row"><span class="k">Base charge</span><span class="v" id="baseCharge">PHP 110.00 (first 10 m³)</span></div>
+            <div class="row"><span class="k">Current marginal rate</span><span class="v" id="rate">PHP 11.00 / m³</span></div>
+            <div class="row"><span class="k">Current tariff tier</span><span class="v" id="tier">11–20 m³</span></div>
+            <div class="row"><span class="k">Reference</span><span class="v" id="reference">DEMO-10-2026</span></div>
+          </div>
+          <hr class="rule">
+          <div class="section-head" style="margin-bottom:10px">
+            <h2>Tariff breakdown</h2>
+            <span class="pill">Progressive billing</span>
+          </div>
+          <div class="rows" id="tariffBreakdown" aria-live="polite"></div>
+          <p class="note" id="tariffNote">The first 10 m³ use the base charge. Each succeeding 10 m³ band uses its applicable rate.</p>
+          <div class="result" id="amountCheck" role="status" aria-live="polite"></div>
+          <button class="pay-btn" id="payButton" type="button">
+            <span>Simulate Pay Now</span><span aria-hidden="true">→</span>
+          </button>
+          <p class="note">Demonstration only — this button does not charge money.</p>
+          <div class="result" id="result" role="status" aria-live="polite">
+            <strong>Demo payment successful</strong>
+            A simulated checkout was completed for <span id="paidAmount">PHP 137.50</span>. No real payment was taken.
+            <small>This web page does not send a payment confirmation to the ESP32. For the classroom demo, the administrator can separately send the PAID SMS command.</small>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card side">
+        <div class="card-body">
+          <div class="side-title">
+            <div class="icon-box" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+            <h2>How this demo works</h2>
+          </div>
+          <p>This page illustrates the payment step for the water-monitoring project. The bill details can be passed into this page from the SMS link.</p>
+          <div class="step"><div class="num">1</div><div><strong>Receive the SMS</strong><span>The system sends your bill amount and a link.</span></div></div>
+          <div class="step"><div class="num">2</div><div><strong>Review the bill</strong><span>Check usage, the base charge, applicable tier rates, and amount due.</span></div></div>
+          <div class="step"><div class="num">3</div><div><strong>Simulate payment</strong><span>Tap the button to show a demonstration confirmation.</span></div></div>
+        </div>
+      </aside>
+    </div>
+    <div class="notice">
+      <div class="notice-inner">
+        <span aria-hidden="true">ⓘ</span>
+        <div><strong>Educational prototype — no real payment is accepted.</strong>This page displays a progressive prototype tariff. PURO interview information supports the PHP 110 base charge for the first 10 m³ and PHP 11/m³ for the next 10 m³; higher-tier rates (PHP 12/m³, PHP 13/m³, and onward) are working assumptions pending confirmation by PURO. Link values are for demonstration and can be edited. Do not enter or publish personal, account, card, or banking information.</div>
+      </div>
+    </div>
+  </main>
+  <footer>Water Billing Portal · Academic demonstration prototype · No transaction is processed</footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const params = new URLSearchParams(window.location.search);
+      const now = new Date();
+      const fallbackPeriod = String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
+
+      function numberParam(name, fallback, maxValue) {
+        const raw = params.get(name);
+        if (raw === null || raw.trim() === '') return fallback;
+        const parsed = Number(raw);
+        if (!Number.isFinite(parsed) || parsed < 0 || parsed > maxValue) return fallback;
+        return parsed;
+      }
+
+      function safePeriod(raw) {
+        if (!raw || !/^\d{1,2}-\d{4}$/.test(raw)) return fallbackPeriod;
+        const parts = raw.split('-');
+        const month = Number(parts[0]);
+        if (month < 1 || month > 12) return fallbackPeriod;
+        return String(month).padStart(2, '0') + '-' + parts[1];
+      }
+
+      const periodValue = safePeriod(params.get('p'));
+      // The firmware sends water use in liters using the "u" parameter.
+      const usageLiters = numberParam('u', 12500.00, 100000000);
+      const usageM3 = usageLiters / 1000;
+
+      // Defaults reflect the current prototype tariff. The legacy "r" parameter
+      // is accepted as an alias for the first excess-tier rate.
+      const baseCharge = numberParam('base', 110.00, 1000000);
+      const includedM3 = numberParam('included', 10.00, 100000);
+      const tierWidthValue = numberParam('tierwidth', 10.00, 100000);
+      const tierWidthM3 = tierWidthValue > 0 ? tierWidthValue : 10.00;
+      const firstTierRate = numberParam('tier1', numberParam('r', 11.00, 100000), 100000);
+      const tierStep = numberParam('tierstep', 1.00, 100000);
+
+      const fmt = value => value.toLocaleString('en-PH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      function calculateProgressiveBill(consumptionM3) {
+        let total = baseCharge;
+        let remaining = Math.max(0, consumptionM3 - includedM3);
+        let tierIndex = 0;
+        const lines = [];
+
+        lines.push({
+          label: `Base charge (first ${fmt(includedM3)} m³)`,
+          detail: 'Fixed minimum charge',
+          charge: baseCharge
+        });
+
+        while (remaining > 0.0000001) {
+          const volume = Math.min(remaining, tierWidthM3);
+          const rate = firstTierRate + tierIndex * tierStep;
+          const lower = includedM3 + tierIndex * tierWidthM3;
+          const upper = lower + tierWidthM3;
+          const charge = volume * rate;
+
+          lines.push({
+            label: `Tier ${tierIndex + 2} (${fmt(lower)}–${fmt(Math.min(upper, consumptionM3))} m³)`,
+            detail: `${fmt(volume)} m³ × PHP ${fmt(rate)} / m³`,
+            charge
+          });
+
+          total += charge;
+          remaining -= volume;
+          tierIndex += 1;
+        }
+
+        return { total: Math.round((total + Number.EPSILON) * 100) / 100, lines };
+      }
+
+      function getCurrentTier(consumptionM3) {
+        if (consumptionM3 <= includedM3) {
+          return {
+            rateText: 'Included in base charge',
+            tierText: `Base tier (0–${fmt(includedM3)} m³)`
+          };
+        }
+
+        const excess = consumptionM3 - includedM3;
+        const index = Math.max(0, Math.ceil(excess / tierWidthM3 - 1e-9) - 1);
+        const lower = includedM3 + index * tierWidthM3;
+        const upper = lower + tierWidthM3;
+        const rate = firstTierRate + index * tierStep;
+
+        return {
+          rateText: `PHP ${fmt(rate)} / m³`,
+          tierText: `${fmt(lower)}–${fmt(upper)} m³`
+        };
+      }
+
+      const tariff = calculateProgressiveBill(usageM3);
+      // "a" is the amount calculated by the ESP32. Keep it as the amount due,
+      // then compare it with the portal's independent progressive calculation.
+      const amountFromDevice = numberParam('a', tariff.total, 100000000);
+      const activeTier = getCurrentTier(usageM3);
+
+      document.getElementById('period').textContent = periodValue.replace('-', '/');
+      document.getElementById('usage').textContent =
+        `${fmt(usageLiters)} L (${fmt(usageM3)} m³)`;
+      document.getElementById('amountDue').textContent = fmt(amountFromDevice);
+      document.getElementById('baseCharge').textContent =
+        `PHP ${fmt(baseCharge)} (first ${fmt(includedM3)} m³)`;
+      document.getElementById('rate').textContent = activeTier.rateText;
+      document.getElementById('tier').textContent = activeTier.tierText;
+      document.getElementById('reference').textContent = 'DEMO-' + periodValue;
+      document.getElementById('paidAmount').textContent = 'PHP ' + fmt(amountFromDevice);
+
+      const breakdown = document.getElementById('tariffBreakdown');
+      tariff.lines.forEach(line => {
+        const row = document.createElement('div');
+        row.className = 'breakdown-row';
+
+        const detail = document.createElement('div');
+        detail.className = 'detail';
+        detail.textContent = line.label + ' · ' + line.detail;
+
+        const charge = document.createElement('div');
+        charge.className = 'charge';
+        charge.textContent = 'PHP ' + fmt(line.charge);
+
+        row.appendChild(detail);
+        row.appendChild(charge);
+        breakdown.appendChild(row);
+      });
+
+      const totalRow = document.createElement('div');
+      totalRow.className = 'breakdown-total';
+      const totalLabel = document.createElement('span');
+      totalLabel.textContent = 'Portal tariff calculation';
+      const totalValue = document.createElement('span');
+      totalValue.textContent = 'PHP ' + fmt(tariff.total);
+      totalRow.appendChild(totalLabel);
+      totalRow.appendChild(totalValue);
+      breakdown.appendChild(totalRow);
+
+      const difference = Math.abs(amountFromDevice - tariff.total);
+      const amountCheck = document.getElementById('amountCheck');
+      if (difference >= 0.01) {
+        amountCheck.classList.add('visible', 'warning');
+        amountCheck.innerHTML = '';
+        const heading = document.createElement('strong');
+        heading.textContent = 'Bill amount needs checking';
+        const message = document.createElement('span');
+        message.textContent =
+          `The ESP32 sent PHP ${fmt(amountFromDevice)}, while this page calculated PHP ${fmt(tariff.total)} using the tariff shown. Difference: PHP ${fmt(difference)}. Verify that the firmware and portal use the same tariff settings.`;
+        amountCheck.appendChild(heading);
+        amountCheck.appendChild(message);
+      }
+
+      const payButton = document.getElementById('payButton');
+      payButton.addEventListener('click', function () {
+        document.getElementById('result').classList.add('visible');
+        document.getElementById('statusPill').textContent = 'Demo · Simulated';
+        payButton.disabled = true;
+        payButton.querySelector('span').textContent = 'Demo payment simulated';
+      });
+    })();
+  </script>
+</body>
+</html>
